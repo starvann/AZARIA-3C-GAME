@@ -42,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
    [SerializeField]
    private float _stepForce;
 
-   private PlayerStances.PlayerStance _playerStance;
+   private PlayerStance _playerStance;
 
    [SerializeField]
    private Transform _climbDetector;
@@ -64,8 +64,13 @@ public class PlayerMovement : MonoBehaviour
 
    private void CheckStep()
    {
-      bool isHitLowerStep = Physics.Raycast(_groundDetector.position, transform.forward, _stepCheckerDistance);
-      bool isHitUpper = Physics.Raycast(_groundDetector.position + _upperStepOffset, transform.forward, _stepCheckerDistance);
+      bool isHitLowerStep = Physics.Raycast(_groundDetector.position, 
+                            transform.forward, 
+                            _stepCheckerDistance);
+      bool isHitUpper = Physics.Raycast(_groundDetector.position + 
+                                        _upperStepOffset, 
+                                        transform.forward, 
+                                        _stepCheckerDistance);
       if (isHitLowerStep && !isHitUpper)
       {
          _rigidbody.AddForce(0,_stepForce,0);
@@ -75,7 +80,8 @@ public class PlayerMovement : MonoBehaviour
 
    private void CheckIsGrounded()
    {
-      _isGrounded = Physics.CheckSphere(_groundDetector.position, _detectorRadius, _groundLayer);
+      _isGrounded = Physics.CheckSphere(_groundDetector.position, 
+                            _detectorRadius, _groundLayer);
    }
 
     private void Awake()
@@ -83,7 +89,7 @@ public class PlayerMovement : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _speed = _walkSpeed;
         _input.OnJumpInput += Jump;
-        _playerStance = PlayerStances.PlayerStance.Stand;
+        _playerStance = PlayerStance.Stand;
         HideAndLockCursor();
     }
 
@@ -100,14 +106,14 @@ public class PlayerMovement : MonoBehaviour
         _input.OnMoveInput -= Move; 
         _input.OnSprintInput -= Sprint;  
         _input.OnJumpInput -= Jump;
-        _input.OnClimbInput -= StartClimb;
+        _input.OnClimbInput += StartClimb;
         _input.OnCancelClimb -= CancelClimb;
     }
 
     private void Move(Vector2 axisDirection){
         Vector3 movementDirection = Vector3.zero;
-        bool isPlayerStanding = _playerStance == PlayerStances.PlayerStance.Stand;
-        bool isPlayerClimbing = _playerStance == PlayerStances.PlayerStance.Climb;
+        bool isPlayerStanding = _playerStance == PlayerStance.Stand;
+        bool isPlayerClimbing = _playerStance == PlayerStance.Climb;
         if (isPlayerStanding)
         {
           switch (_cameraManager.CameraState)
@@ -174,7 +180,7 @@ public class PlayerMovement : MonoBehaviour
       if (_isGrounded)
       {
          Vector3 jumpDirection = Vector3.up;
-      _rigidbody.AddForce(jumpDirection * _jumpForce * Time.deltaTime);
+          _rigidbody.AddForce(jumpDirection * _jumpForce * Time.deltaTime);
       }
     }
 
@@ -186,13 +192,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartClimb()
     {
-      bool isInFrontOfClimbingWall = Physics.Raycast(_climbDetector.position, transform.forward, out RaycastHit hit, _climbCheckDistace, _climbableLayer);
-      bool isNotClimbing = _playerStance != PlayerStances.PlayerStance.Climb;
+      bool isInFrontOfClimbingWall = Physics.Raycast(_climbDetector.position,
+                                      transform.forward,
+                                      out RaycastHit hit, 
+                                      _climbCheckDistace,
+                                      _climbableLayer);
+      bool isNotClimbing = _playerStance != PlayerStance.Climb;
       if (isInFrontOfClimbingWall && _isGrounded && isNotClimbing)
       {
         Vector3 offset = (transform.forward * _climbOffset.z) + (Vector3.up * _climbOffset.y);
         transform.position = hit.point - offset;
-        _playerStance = PlayerStances.PlayerStance.Climb;
+        _playerStance = PlayerStance.Climb;
         _rigidbody.useGravity = false;
         _cameraManager.SetFPSClampedCamera(true,transform.rotation.eulerAngles);
         _cameraManager.SetTPSFieldOfView(70);
@@ -201,9 +211,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void CancelClimb()
     {
-      if (_playerStance == PlayerStances.PlayerStance.Climb)
+      if (_playerStance == PlayerStance.Climb)
       {
-        _playerStance = PlayerStances.PlayerStance.Stand;
+        _playerStance = PlayerStance.Stand;
         _rigidbody.useGravity = true;
         transform.position -= transform.forward * 1f;
         _cameraManager.SetFPSClampedCamera(false,transform.rotation.eulerAngles);

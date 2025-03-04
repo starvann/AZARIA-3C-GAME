@@ -7,8 +7,6 @@ using Cinemachine;
 public class CameraManager : MonoBehaviour
 {
     [SerializeField]
-    private CinemachineFreeLook _tpsCamera;
-    [SerializeField]
     public CameraState CameraState;
 
     [SerializeField]
@@ -22,11 +20,8 @@ public class CameraManager : MonoBehaviour
         _inputManager.OnChangePOV += SwitchCamera;
     }
 
-    private void OnDestroy()
-    {
-        _inputManager.OnChangePOV -= SwitchCamera;
-    }
-
+    [SerializeField]
+    private CinemachineFreeLook _tpsCamera;
     private void SwitchCamera()
     {
         if (CameraState == CameraState.ThirdPerson)
@@ -39,9 +34,16 @@ public class CameraManager : MonoBehaviour
         {
             CameraState = CameraState.ThirdPerson; 
             _tpsCamera.gameObject.SetActive(true);
-            _tpsCamera.gameObject.SetActive(false);
+            _fpsCamera.gameObject.SetActive(false);
         }
     }
+
+
+    private void OnDestroy()
+    {
+        _inputManager.OnChangePOV -= SwitchCamera;
+    }
+
     public void SetFPSClampedCamera(bool isClamped, Vector3 playerRotation)
     {
         CinemachinePOV pov = _fpsCamera.GetCinemachineComponent<CinemachinePOV>();

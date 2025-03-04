@@ -86,9 +86,9 @@ public class InputManager : MonoBehaviour
         if (isPressChangePOVInput)
         {
             if (OnChangePOV != null)
-            {
+        {
                 OnChangePOV();
-            }
+        }
         }
 
     }
