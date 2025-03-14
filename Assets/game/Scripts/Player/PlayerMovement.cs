@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
   [SerializeField]
   private Transform _hitDetector;
 
-    [SerializeField]
+  [SerializeField]
     private Vector3 _upperStepOffset;
 
     [SerializeField]
@@ -42,33 +42,24 @@ public class PlayerMovement : MonoBehaviour
 
   [SerializeField]
   private Vector3 _glideRotationSpeed;
-  
+
     [SerializeField]
     private float _walkSprintTransition;
-    
+
     [SerializeField]
     private float _walkSpeed;
     
     [SerializeField]
     private float _sprintSpeed;
 
-
     [SerializeField]
     private float _rotationSmoothTime = 0.1f;
-
-    
-    private Rigidbody _rigidbody;
-    private float _speed;
-    private float _rotationSmoothVelocity;
 
     [SerializeField]
     private float _jumpForce;
 
-
     [SerializeField]
     private float _detectorRadius;
-
-
 
     [SerializeField]
     private float _stepCheckerDistance;
@@ -76,20 +67,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float _stepForce;
 
-    private PlayerStance _playerStance;
-
-
     [SerializeField]
     private float _climbCheckDistace;
-    
-
 
     [SerializeField]
     private float _climbSpeed;
-
-
-
-  private Animator _animator;
 
   [SerializeField]
   private float _crouchSpeed;
@@ -100,27 +82,26 @@ public class PlayerMovement : MonoBehaviour
   [SerializeField]
   private float _airDrag;
 
-  private CapsuleCollider _collider;
-
-
   [SerializeField]
   private float _minGlideRotationX;
 
   [SerializeField]
   private float _maxGlideRotationX;
 
-  private bool _isPunching;
-
-  private int _combo = 0;
-
   [SerializeField]
   private float _resetComboInterval;
 
-  private Coroutine _resetCombo;
-
-
   [SerializeField]
   private float _hitDetectorRadius;
+  private Coroutine _resetCombo;
+  private int _combo = 0;
+  private bool _isPunching;
+  private CapsuleCollider _collider;
+    private PlayerStance _playerStance;
+    private Rigidbody _rigidbody;
+    private float _speed;
+    private float _rotationSmoothVelocity;
+  private Animator _animator;
 
 
     private void CheckStep()
