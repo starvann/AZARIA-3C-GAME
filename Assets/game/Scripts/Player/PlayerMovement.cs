@@ -5,6 +5,45 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField]
+    private InputManager _input;
+
+  [SerializeField]
+  private CameraManager _cameraManager;
+
+  [SerializeField]
+  private PlayerAudioManager _playerAudioManager;
+
+    [SerializeField]
+    private LayerMask _groundLayer;
+
+    [SerializeField]
+    private LayerMask _climbableLayer;
+
+  [SerializeField]
+  private LayerMask _hitLayer;
+
+    [SerializeField]
+    private Transform _groundDetector;
+
+    [SerializeField]
+    private Transform _climbDetector;
+
+  [SerializeField]
+  private Transform _cameraTransform;
+
+  [SerializeField]
+  private Transform _hitDetector;
+
+    [SerializeField]
+    private Vector3 _upperStepOffset;
+
+    [SerializeField]
+    private Vector3 _climbOffset;
+
+  [SerializeField]
+  private Vector3 _glideRotationSpeed;
+  
+    [SerializeField]
     private float _walkSprintTransition;
     
     [SerializeField]
@@ -13,8 +52,6 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float _sprintSpeed;
 
-    [SerializeField]
-    private InputManager _input;
 
     [SerializeField]
     private float _rotationSmoothTime = 0.1f;
@@ -27,17 +64,11 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField]
     private float _jumpForce;
 
-    [SerializeField]
-    private Transform _groundDetector;
 
     [SerializeField]
     private float _detectorRadius;
 
-    [SerializeField]
-    private LayerMask _groundLayer;
 
-    [SerializeField]
-    private Vector3 _upperStepOffset;
 
     [SerializeField]
     private float _stepCheckerDistance;
@@ -47,26 +78,16 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerStance _playerStance;
 
-    [SerializeField]
-    private Transform _climbDetector;
 
     [SerializeField]
     private float _climbCheckDistace;
     
-    [SerializeField]
-    private LayerMask _climbableLayer;
 
-    [SerializeField]
-    private Vector3 _climbOffset;
 
     [SerializeField]
     private float _climbSpeed;
 
-  [SerializeField]
-  private Transform _cameraTransform;
 
-  [SerializeField]
-  private CameraManager _cameraManager;
 
   private Animator _animator;
 
@@ -81,8 +102,6 @@ public class PlayerMovement : MonoBehaviour
 
   private CapsuleCollider _collider;
 
-  [SerializeField]
-  private Vector3 _glideRotationSpeed;
 
   [SerializeField]
   private float _minGlideRotationX;
@@ -99,17 +118,11 @@ public class PlayerMovement : MonoBehaviour
 
   private Coroutine _resetCombo;
 
-  [SerializeField]
-  private Transform _hitDetector;
 
   [SerializeField]
   private float _hitDetectorRadius;
 
-  [SerializeField]
-  private LayerMask _hitLayer;
 
-  [SerializeField]
-  private PlayerAudioManager _playerAudioManager;
     private void CheckStep()
     {
       bool isHitLowerStep = Physics.Raycast(_groundDetector.position, 
@@ -129,8 +142,7 @@ public class PlayerMovement : MonoBehaviour
     private void CheckIsGrounded()
     {
       _animator.SetBool("IsGrounded", _isGrounded);
-      _isGrounded = Physics.CheckSphere(_groundDetector.position, 
-                            _detectorRadius, _groundLayer);
+      _isGrounded = Physics.CheckSphere(_groundDetector.position, _detectorRadius, _groundLayer);
       if (_isGrounded)
       {
         CancelGlide();
@@ -261,8 +273,8 @@ public class PlayerMovement : MonoBehaviour
       if (_isGrounded)
       {
         _animator.SetTrigger("Jump");
-          Vector3 jumpDirection = Vector3.up;
-          _rigidbody.AddForce(jumpDirection * _jumpForce * Time.deltaTime);
+        Vector3 jumpDirection = Vector3.up;
+        _rigidbody.AddForce(jumpDirection * _jumpForce * Time.deltaTime);
       }
     }
 

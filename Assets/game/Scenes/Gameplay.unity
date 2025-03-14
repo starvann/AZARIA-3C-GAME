@@ -469,7 +469,7 @@ Transform:
   m_GameObject: {fileID: 35547788}
   serializedVersion: 2
   m_LocalRotation: {x: 0.49657112, y: -0.49657112, z: 0.5034056, w: -0.5034056}
-  m_LocalPosition: {x: -4.44, y: 1, z: 1.92}
+  m_LocalPosition: {x: -4.312, y: 1.414, z: 1.92}
   m_LocalScale: {x: 1, y: 1, z: 1.0625}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2610,8 +2610,8 @@ Transform:
   m_GameObject: {fileID: 1921331006}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.4788383, y: 1.257542, z: 0.64704025}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 2.372, y: 1.179, z: 0.64704025}
+  m_LocalScale: {x: 1.2185, y: 1.3691, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -8729,42 +8729,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fa4523dd14269a43aafe08a1c38717b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _walkSprintTransition: 60
-  _walkSpeed: 350
-  _sprintSpeed: 450
   _input: {fileID: 1336503584}
-  _rotationSmoothTime: 0.1
-  _jumpForce: 110
-  _groundDetector: {fileID: 564234267}
-  _detectorRadius: 0.2
+  _cameraManager: {fileID: 679733353}
+  _playerAudioManager: {fileID: 5646329766870198699}
   _groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  _upperStepOffset: {x: 0, y: 0.3, z: 0.3}
-  _stepCheckerDistance: 0.1
-  _stepForce: 2.5
-  _climbDetector: {fileID: 1325399545}
-  _climbCheckDistace: 1
   _climbableLayer:
     serializedVersion: 2
     m_Bits: 64
-  _climbOffset: {x: 0, y: -1, z: 0.8}
-  _climbSpeed: 100
-  _cameraTransform: {fileID: 1128555760}
-  _cameraManager: {fileID: 679733353}
-  _crouchSpeed: 325
-  _glideSpeed: 70
-  _airDrag: 5
-  _glideRotationSpeed: {x: 20, y: 40, z: 20}
-  _minGlideRotationX: -10
-  _maxGlideRotationX: 14
-  _resetComboInterval: 5
-  _hitDetector: {fileID: 1434196034}
-  _hitDetectorRadius: 1
   _hitLayer:
     serializedVersion: 2
     m_Bits: 128
-  _playerAudioManager: {fileID: 5646329766870198699}
+  _groundDetector: {fileID: 564234267}
+  _climbDetector: {fileID: 1325399545}
+  _cameraTransform: {fileID: 1128555760}
+  _hitDetector: {fileID: 1434196034}
+  _upperStepOffset: {x: 0, y: 0.3, z: 0.3}
+  _climbOffset: {x: 0, y: -1, z: 0.8}
+  _glideRotationSpeed: {x: 20, y: 40, z: 20}
+  _walkSprintTransition: 60
+  _walkSpeed: 350
+  _sprintSpeed: 450
+  _rotationSmoothTime: 0.1
+  _jumpForce: 110
+  _detectorRadius: 0.2
+  _stepCheckerDistance: 0.1
+  _stepForce: 2.5
+  _climbCheckDistace: 1
+  _climbSpeed: 100
+  _crouchSpeed: 325
+  _glideSpeed: 70
+  _airDrag: 5
+  _minGlideRotationX: -10
+  _maxGlideRotationX: 14
+  _resetComboInterval: 5
+  _hitDetectorRadius: 1
 --- !u!136 &5646329766870198697
 CapsuleCollider:
   m_ObjectHideFlags: 0
