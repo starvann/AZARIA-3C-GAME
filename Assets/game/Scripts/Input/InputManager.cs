@@ -89,18 +89,18 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void CheckChangePOVInput()
+    private void CheckChangePOVInput() 
     {
         bool isPressChangePOVInput = Input.GetKeyDown(KeyCode.Q);
-        if (isPressChangePOVInput)
+        if (isPressChangePOVInput) 
         {
             if (OnChangePOV != null)
         {
-                OnChangePOV();
+            OnChangePOV();
         }
-        }
-
     }
+
+}
 
     private void CheckClimbInput()
     {

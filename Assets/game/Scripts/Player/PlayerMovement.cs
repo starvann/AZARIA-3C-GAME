@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [SerializeField]
-    private InputManager _input;
+  [SerializeField]
+  private InputManager _input;
 
   [SerializeField]
   private CameraManager _cameraManager;
@@ -13,20 +13,20 @@ public class PlayerMovement : MonoBehaviour
   [SerializeField]
   private PlayerAudioManager _playerAudioManager;
 
-    [SerializeField]
-    private LayerMask _groundLayer;
+  [SerializeField]
+  private LayerMask _groundLayer;
 
-    [SerializeField]
-    private LayerMask _climbableLayer;
+  [SerializeField]
+  private LayerMask _climbableLayer;
 
   [SerializeField]
   private LayerMask _hitLayer;
 
-    [SerializeField]
-    private Transform _groundDetector;
+  [SerializeField]
+  private Transform _groundDetector;
 
-    [SerializeField]
-    private Transform _climbDetector;
+  [SerializeField]
+  private Transform _climbDetector;
 
   [SerializeField]
   private Transform _cameraTransform;
@@ -35,43 +35,43 @@ public class PlayerMovement : MonoBehaviour
   private Transform _hitDetector;
 
   [SerializeField]
-    private Vector3 _upperStepOffset;
+  private Vector3 _upperStepOffset;
 
-    [SerializeField]
-    private Vector3 _climbOffset;
+  [SerializeField]
+  private Vector3 _climbOffset;
 
   [SerializeField]
   private Vector3 _glideRotationSpeed;
 
-    [SerializeField]
-    private float _walkSprintTransition;
+  [SerializeField]
+  private float _walkSprintTransition;
 
-    [SerializeField]
-    private float _walkSpeed;
+  [SerializeField]
+  private float _walkSpeed;
     
-    [SerializeField]
-    private float _sprintSpeed;
+  [SerializeField]
+  private float _sprintSpeed;
 
-    [SerializeField]
-    private float _rotationSmoothTime = 0.1f;
+  [SerializeField]
+  private float _rotationSmoothTime = 0.1f;
 
-    [SerializeField]
-    private float _jumpForce;
+  [SerializeField]
+  private float _jumpForce;
 
-    [SerializeField]
-    private float _detectorRadius;
+  [SerializeField]
+  private float _detectorRadius;
 
-    [SerializeField]
-    private float _stepCheckerDistance;
+  [SerializeField]
+  private float _stepCheckerDistance;
 
-    [SerializeField]
-    private float _stepForce;
+  [SerializeField]
+  private float _stepForce;
 
-    [SerializeField]
-    private float _climbCheckDistace;
+  [SerializeField]
+  private float _climbCheckDistace;
 
-    [SerializeField]
-    private float _climbSpeed;
+  [SerializeField]
+  private float _climbSpeed;
 
   [SerializeField]
   private float _crouchSpeed;
@@ -97,10 +97,10 @@ public class PlayerMovement : MonoBehaviour
   private int _combo = 0;
   private bool _isPunching;
   private CapsuleCollider _collider;
-    private PlayerStance _playerStance;
-    private Rigidbody _rigidbody;
-    private float _speed;
-    private float _rotationSmoothVelocity;
+  private PlayerStance _playerStance;
+  private Rigidbody _rigidbody;
+  private float _speed;
+  private float _rotationSmoothVelocity;
   private Animator _animator;
 
 
@@ -147,7 +147,6 @@ public class PlayerMovement : MonoBehaviour
         _input.OnSprintInput += Sprint;
         _input.OnClimbInput += StartClimb;
         _input.OnCancelClimb += CancelClimb;
-        _cameraManager.OnChangePerspective += ChangePerspective;
         _input.OnCrouchInput += Crouch;
         _input.OnGlideInput += StartGlide;
         _input.OnCancelGlide += CancelGlide;  
@@ -161,7 +160,6 @@ public class PlayerMovement : MonoBehaviour
         _input.OnJumpInput -= Jump;
         _input.OnClimbInput += StartClimb;
         _input.OnCancelClimb -= CancelClimb;
-        _cameraManager.OnChangePerspective -= ChangePerspective;
         _input.OnCrouchInput -= Crouch;
         _input.OnGlideInput -= StartGlide;
         _input.OnCancelGlide -= CancelGlide; 
@@ -268,11 +266,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void StartClimb()
     {
-      bool isInFrontOfClimbingWall = Physics.Raycast(_climbDetector.position,
-                                      transform.forward,
-                                      out RaycastHit hit, 
-                                      _climbCheckDistace,
-                                      _climbableLayer);
+      bool isInFrontOfClimbingWall = Physics.Raycast(_climbDetector.position, transform.forward, out RaycastHit hit, _climbCheckDistace, _climbableLayer);
       bool isNotClimbing = _playerStance != PlayerStance.Climb;
       if (isInFrontOfClimbingWall && _isGrounded && isNotClimbing)
       {
@@ -329,21 +323,21 @@ public class PlayerMovement : MonoBehaviour
     {
       if(_playerStance != PlayerStance.Glide && !_isGrounded)
       {
-        _playerAudioManager.PlayGlideSfx();
         _playerStance = PlayerStance.Glide;
         _animator.SetBool("IsGliding", true);
         _cameraManager.SetFPSClampedCamera(true, transform.rotation.eulerAngles);
+        _playerAudioManager.PlayGlideSfx();
       }
     }
 
     private void CancelGlide()
     {
-      if(_playerStance != PlayerStance.Glide)
+      if(_playerStance == PlayerStance.Glide)
       {
-        _playerAudioManager.StopGlideSfx();
         _playerStance = PlayerStance.Stand;
         _animator.SetBool("IsGliding", false);
         _cameraManager.SetFPSClampedCamera(false, transform.rotation.eulerAngles);
+        _playerAudioManager.StopGlideSfx();
       }
     }
 
