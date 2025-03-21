@@ -33,6 +33,7 @@ public class InputManager : MonoBehaviour
         CheckCancelnput();
         CheckPunchInput();
         CheckMainMenuInput();
+        CheckChangePOVInput();
     }
 
     private void CheckMovementInput()
@@ -98,8 +99,7 @@ public class InputManager : MonoBehaviour
         {
             OnChangePOV();
         }
-    }
-
+        }
 }
 
     private void CheckClimbInput()

@@ -158,7 +158,7 @@ public class PlayerMovement : MonoBehaviour
         _input.OnMoveInput -= Move; 
         _input.OnSprintInput -= Sprint;  
         _input.OnJumpInput -= Jump;
-        _input.OnClimbInput += StartClimb;
+        _input.OnClimbInput = StartClimb;
         _input.OnCancelClimb -= CancelClimb;
         _input.OnCrouchInput -= Crouch;
         _input.OnGlideInput -= StartGlide;
@@ -355,23 +355,26 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void Punch()
+{
+    Debug.Log("Punch dilakukan!"); // Debugging
+
+    if (!_isPunching && _playerStance == PlayerStance.Stand)
     {
-      if(_isPunching && _playerStance == PlayerStance.Stand)
-      {
         _isPunching = true;
-        if(_combo < 3)
+
+        if (_combo < 3)
         {
-          _combo = _combo + 1;
+            _combo++;
         }
         else
         {
-          _combo = 1;
+            _combo = 1;
         }
+
         _animator.SetInteger("Combo", _combo);
         _animator.SetTrigger("Punch");
-      }
     }
-
+}
     private void EndPunch()
     {
       if(_resetCombo != null)
@@ -379,14 +382,15 @@ public class PlayerMovement : MonoBehaviour
         StopCoroutine(_resetCombo);
       }
       _resetCombo = StartCoroutine(ResetCombo());
+      _isPunching = false;
     }
 
     private IEnumerator ResetCombo()
-    {
-      yield return new WaitForSeconds(_resetComboInterval);
-      _combo = 0;
-    }
-
+{
+    yield return new WaitForSeconds(0.5f);
+    _combo = 0;
+    _isPunching = false;
+}
     private void Hit()
     {
       Collider[] hitObjects = Physics.OverlapSphere(_hitDetector.position, _hitDetectorRadius, _hitLayer);
