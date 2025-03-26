@@ -108,6 +108,7 @@ public class InputManager : MonoBehaviour
         if (isPressClimbInput)
         {
             OnClimbInput();
+            Debug.Log("Memanjat");
         }
     }
 

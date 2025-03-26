@@ -103,6 +103,8 @@ public class PlayerMovement : MonoBehaviour
   private float _rotationSmoothVelocity;
   private Animator _animator;
 
+  private Vector3 rotationDegree = Vector3.zero;
+
 
     private void CheckStep()
     {
@@ -122,12 +124,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckIsGrounded()
     {
-      _animator.SetBool("IsGrounded", _isGrounded);
       _isGrounded = Physics.CheckSphere(_groundDetector.position, _detectorRadius, _groundLayer);
       if (_isGrounded)
       {
         CancelGlide();
       }
+      _animator.SetBool("IsGrounded", _isGrounded);
     }
 
     private void Awake()
@@ -210,21 +212,36 @@ public class PlayerMovement : MonoBehaviour
       }
       else if(isPlayerClimbing)
       {
-        Vector3 horizontal = axisDirection.x * transform.right;
-        Vector3 vertical = axisDirection.y * transform.up;
-        movementDirection = horizontal + vertical;
+        Vector3 horizontal = Vector3.zero;
+        Vector3 vertical = Vector3.zero;
+        Vector3 checkerLeftPosition = transform.position + (transform.up * 1) + (-transform.right * .75f);
+        Vector3 checkerRightPosition = transform.position + (transform.up * 1) + (transform.right * 1f);
+        Vector3 checkerUpPosition = transform.position + (transform.up * 2.5f);
+        Vector3 checkerDownPosition = transform.position + (-transform.up * .25f);
+        bool isAbleClimbLeft = Physics.Raycast(checkerLeftPosition, transform.forward, _climbCheckDistace, _climbableLayer);
+        bool isAbleClimbRight = Physics.Raycast(checkerRightPosition, transform.forward, _climbCheckDistace, _climbableLayer);
+        bool isAbleClimbUp = Physics.Raycast(checkerUpPosition, transform.forward, _climbCheckDistace, _climbableLayer);
+        bool isAbleClimbDown = Physics.Raycast(checkerDownPosition, transform.forward, _climbCheckDistace, _climbableLayer);
+        if ((isAbleClimbLeft && (axisDirection.x < 0 )) || (isAbleClimbRight && (axisDirection.x > 0)))
+        {
+          horizontal = axisDirection.x * transform.right;
+        }
+        if ((isAbleClimbUp && (axisDirection.y > 0 )) || (isAbleClimbDown && (axisDirection.y < 0)))
+        {
+          vertical = axisDirection.y * transform.up;
+        }
+        movementDirection =  horizontal + vertical;
         _rigidbody.AddForce(movementDirection * Time.deltaTime * _climbSpeed);
-        Vector3 velocity = new Vector3(_rigidbody.velocity.x, _rigidbody.velocity.y, 0);
+        Vector3 velocity = new Vector3(_rigidbody.velocity.x, _rigidbody.velocity.y, 0 );
         _animator.SetFloat("ClimbVelocityY", velocity.magnitude * axisDirection.y);
         _animator.SetFloat("ClimbVelocityX", velocity.magnitude * axisDirection.x);
       }
       else if (isPlayerGliding)
       {
-        Vector3 rotationDegree = transform.rotation.eulerAngles;
         rotationDegree.x += _glideRotationSpeed.x * axisDirection.y * Time.deltaTime;
         rotationDegree.x = Mathf.Clamp(rotationDegree.x, _minGlideRotationX, _maxGlideRotationX);
-        rotationDegree.z = _glideRotationSpeed.z * axisDirection.x * Time.deltaTime;
-        rotationDegree.y = _glideRotationSpeed.y * axisDirection.x * Time.deltaTime;
+        rotationDegree.z += _glideRotationSpeed.z * axisDirection.x * Time.deltaTime;
+        rotationDegree.y += _glideRotationSpeed.y * axisDirection.x * Time.deltaTime;
         transform.rotation = Quaternion.Euler(rotationDegree);
       }
   }
@@ -249,9 +266,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-      if (_isGrounded)
+      if (_isGrounded && !_isPunching)
       {
-        _animator.SetTrigger("Jump");
+        _animator.SetBool("IsJump", true);
+        _animator.SetBool("IsJump", false);
         Vector3 jumpDirection = Vector3.up;
         _rigidbody.AddForce(jumpDirection * _jumpForce * Time.deltaTime);
       }
@@ -270,14 +288,17 @@ public class PlayerMovement : MonoBehaviour
       bool isNotClimbing = _playerStance != PlayerStance.Climb;
       if (isInFrontOfClimbingWall && _isGrounded && isNotClimbing)
       {
-        Vector3 offset = (transform.forward * _climbOffset.z) + (Vector3.up * _climbOffset.y);
+        _cameraManager.SetFPSClampedCamera(true, transform.rotation.eulerAngles);
+        Vector3 climbablePoint = hit.collider.bounds.ClosestPoint(transform.position);
+        Vector3 direction = (climbablePoint - transform.position).normalized;
+        direction.y = 0;
+        transform.rotation = Quaternion.LookRotation(direction);
+        Vector3 offset = (transform.forward * _climbOffset.z) - (Vector3.up * _climbOffset.y);
         transform.position = hit.point - offset;
         _playerStance = PlayerStance.Climb;
-        _rigidbody.useGravity = false;
-        _cameraManager.SetFPSClampedCamera(true,transform.rotation.eulerAngles);
-        _cameraManager.SetTPSFieldOfView(70);
         _animator.SetBool("IsClimbing", true);
-        _collider.center = Vector3.up * 1.3f;
+        _rigidbody.useGravity = false;
+        _cameraManager.SetTPSFieldOfView(70);
       }
     }
 
@@ -303,13 +324,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void Crouch()
     {
+      Vector3 checkerUpPosition = transform.position + (transform.up * 1.4f);
+      bool isCantStand = Physics.Raycast(checkerUpPosition, transform.up, 0.25f, _groundLayer);
       if(_playerStance == PlayerStance.Stand)
       {
         _playerStance = PlayerStance.Crouch;
         _animator.SetBool("IsCrouch", true);
         _speed = _crouchSpeed;
       }
-      else if (_playerStance == PlayerStance.Crouch) 
+      else if (_playerStance == PlayerStance.Crouch && !isCantStand ) 
       {
           _playerStance = PlayerStance.Stand;
           _animator.SetBool("IsCrouch", false);
@@ -323,6 +346,7 @@ public class PlayerMovement : MonoBehaviour
     {
       if(_playerStance != PlayerStance.Glide && !_isGrounded)
       {
+        rotationDegree = transform.rotation.eulerAngles;
         _playerStance = PlayerStance.Glide;
         _animator.SetBool("IsGliding", true);
         _cameraManager.SetFPSClampedCamera(true, transform.rotation.eulerAngles);
@@ -358,7 +382,7 @@ public class PlayerMovement : MonoBehaviour
 {
     Debug.Log("Punch dilakukan!"); // Debugging
 
-    if (!_isPunching && _playerStance == PlayerStance.Stand)
+    if (!_isPunching && _playerStance == PlayerStance.Stand && _isGrounded)
     {
         _isPunching = true;
 
