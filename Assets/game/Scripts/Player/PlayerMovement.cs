@@ -105,18 +105,6 @@ public class PlayerMovement : MonoBehaviour
 
   private Vector3 rotationDegree = Vector3.zero;
 
-  [SerializeField]
-  private Transform _resetCheckpointPosition;
-
-  public void ResetPositionToCheckpoint()
-  {
-    if (_resetCheckpointPosition !=null )
-    {
-      transform.position = _resetCheckpointPosition.position;
-      transform.rotation = _resetCheckpointPosition.rotation;
-    }
-  }
-
 
     private void CheckStep()
     {
@@ -157,7 +145,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Game Start - Isgrounded" + _isGrounded);
         _input.OnMoveInput += Move;
         _input.OnSprintInput += Sprint;
         _input.OnClimbInput += StartClimb;
