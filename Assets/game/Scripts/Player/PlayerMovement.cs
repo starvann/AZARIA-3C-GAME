@@ -153,6 +153,7 @@ public class PlayerMovement : MonoBehaviour
         _input.OnGlideInput += StartGlide;
         _input.OnCancelGlide += CancelGlide;  
         _input.OnPunchInput += Punch;
+        _cameraManager.OnChangePerspective += ChangePerspective;
     }
 
     private void OnDestroy()
@@ -166,12 +167,14 @@ public class PlayerMovement : MonoBehaviour
         _input.OnGlideInput -= StartGlide;
         _input.OnCancelGlide -= CancelGlide; 
         _input.OnPunchInput -= Punch;
+        _cameraManager.OnChangePerspective -= ChangePerspective;
     }
 
   private void ChangePerspective()
   {
     _animator.SetTrigger("ChangePerspective");
   }
+
   private void Move(Vector2 axisDirection)
   {
       Vector3 movementDirection = Vector3.zero;
@@ -411,7 +414,7 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator ResetCombo()
 {
-    yield return new WaitForSeconds(0.5f);
+    yield return new WaitForSeconds(5f);
     _combo = 0;
     _isPunching = false;
 }

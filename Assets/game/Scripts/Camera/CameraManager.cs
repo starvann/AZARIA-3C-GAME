@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using System;
 
 public class CameraManager : MonoBehaviour
 {
@@ -17,13 +18,16 @@ public class CameraManager : MonoBehaviour
     [SerializeField]
     private CinemachineFreeLook _tpsCamera;
 
+    public Action OnChangePerspective;
+
     private void Start()
     {
         _inputManager.OnChangePOV += SwitchCamera;
     }
     
     private void SwitchCamera()
-    {
+    {   
+        OnChangePerspective();
         if (CameraState == CameraState.ThirdPerson)
         {
             CameraState = CameraState.FirstPerson;
