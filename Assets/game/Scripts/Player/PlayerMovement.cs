@@ -153,6 +153,7 @@ public class PlayerMovement : MonoBehaviour
         _input.OnGlideInput += StartGlide;
         _input.OnCancelGlide += CancelGlide;  
         _input.OnPunchInput += Punch;
+        _cameraManager.OnChangePerspective += ChangePerspective;
     }
 
     private void OnDestroy()
@@ -166,6 +167,7 @@ public class PlayerMovement : MonoBehaviour
         _input.OnGlideInput -= StartGlide;
         _input.OnCancelGlide -= CancelGlide; 
         _input.OnPunchInput -= Punch;
+        _cameraManager.OnChangePerspective -= ChangePerspective;
     }
 
   private void ChangePerspective()
