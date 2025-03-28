@@ -1,4 +1,5 @@
 using System.Collections;
+using TreeEditor;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -105,6 +106,8 @@ public class PlayerMovement : MonoBehaviour
 
   private Vector3 rotationDegree = Vector3.zero;
 
+  [SerializeField]
+  private Transform _resetCheckpointPosition;
 
     private void CheckStep()
     {
@@ -428,4 +431,13 @@ public class PlayerMovement : MonoBehaviour
           }
         }
     }
+
+    public void ResetPositionToCheckpoint()
+    {
+      if (_resetCheckpointPosition != null)
+      {
+        transform.position = _resetCheckpointPosition.position;
+        transform.rotation = _resetCheckpointPosition.rotation;
+      }
+    } 
 }
