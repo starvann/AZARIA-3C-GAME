@@ -276,7 +276,7 @@ public class PlayerMovement : MonoBehaviour
         _animator.SetBool("IsJump", true);
         _animator.SetBool("IsJump", false);
         Vector3 jumpDirection = Vector3.up;
-        _rigidbody.AddForce(jumpDirection * _jumpForce * Time.deltaTime);
+        _rigidbody.AddForce(jumpDirection * _jumpForce);
       }
     }
 
